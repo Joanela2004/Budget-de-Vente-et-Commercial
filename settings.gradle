@@ -1,0 +1,2 @@
+rootProject.name = 'MonAppJava'
+include ':app'
