@@ -1,23 +1,21 @@
 package com.madmeca.app;
+
 public class Vente {
     private int t;
     private int annee;
-    private double montant;
+    private double vi;
 
-    public Vente(int t, int annee, double montant){
-        this.t=t;
-        this.annee=annee;
-        this.montant=montant;
-    }
-    public int getAnnee() {
-        return annee;
+    public Vente(int t, int annee, double vi) {
+        this.t = t;
+        this.annee = annee;
+        this.vi = vi;
     }
 
-    public double getMontant() {
-        return montant;
-    }
+    public int getT() { return t; }
+    public int getAnnee() { return annee; }
+    public double getVi() { return vi; }
 
-    public int getT() {
-        return t;
-    }
+    public void setAnnee(int annee) { this.annee = annee; }
+    public void setVi(double vi) { this.vi = vi; }
+    public void setT(int t) { this.t = t; }
 }

@@ -4,31 +4,58 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="12dp"
-    android:background="@color/card_bg"
-    > 
+    android:gravity="center_vertical"
+    android:weightSum="6">
+
     <TextView
         android:id="@+id/txtT"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@color/accent"
-        android:textStyle="bold" 
-        android:gravity="center"/>
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:textColor="@color/black" />
 
     <TextView
-        android:id="@+id/txtAnnee"
+        android:id="@+id/edtAnneeItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/edtViItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:textColor="@color/text_primary" 
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textColor="@color/black" />
 
-    <TextView
-        android:id="@+id/txtMontant"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:textColor="@color/text_primary"
-        android:gravity="center" />
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/btnModifier"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@null"
+            android:src="@android:drawable/ic_menu_edit"
+            android:layout_marginEnd="6dp"
+            android:scaleType="centerInside"
+            android:tint="@color/accent" />
+
+        <ImageButton
+            android:id="@+id/btnSupprimer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circle_bg_gray"
+            android:src="@drawable/ic_close"
+            android:scaleType="centerInside"
+            android:tint="#FF5252" />
+    </LinearLayout>
+    
 </LinearLayout>
