@@ -6,140 +6,181 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-
+import androidx.appcompat.app.AlertDialog.Builder;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private VenteAdapter adapter;
     private List<Vente> listeVentes;
     
-    private Button btnAjouter, btnEnregistrer, btnAnnuler;
-    private EditText edtAnnee, edtVi;
-    private LinearLayout layoutSaisie;
-    private TextView txtAnneeDebut, txtAnneeFin;
-    
-    private int positionModification = -1;
+    private Button btnAjouter;
+    private LinearLayout layoutTotal;
+    private TextView txtAnneeDebut, txtAnneeFin, txtMoyenneT, txtMoyenneVi;
+    private TextView txtSommeT, txtSommeVi, txtSommeEcartT, txtSommeEcartV, txtSommeT2, txtSommeV2, txtSommeTV;
+    private TextView txtValA, txtValB, txtEquation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialisation UI
-        edtAnnee = findViewById(R.id.edtAnnee);
-        edtVi = findViewById(R.id.edtVi);
         btnAjouter = findViewById(R.id.btnAjouterLigne);
-        btnEnregistrer = findViewById(R.id.btnEnregistrer);
-        btnAnnuler = findViewById(R.id.btnAnnuler);
-        layoutSaisie = findViewById(R.id.layoutSaisie);
+        layoutTotal = findViewById(R.id.layoutTotal);
         recyclerView = findViewById(R.id.recyclerViewVente);
+        
         txtAnneeDebut = findViewById(R.id.txtAnneeDebut);
         txtAnneeFin = findViewById(R.id.txtAnneeFin);
-
-        // L'année est calculée, pas saisie
-        edtAnnee.setFocusable(false);
+        txtMoyenneT = findViewById(R.id.txtMoyenneT);
+        txtMoyenneVi = findViewById(R.id.txtMoyenneVi);
+        
+        txtSommeT = findViewById(R.id.txtSommeT);
+        txtSommeVi = findViewById(R.id.txtSommeVi);
+        txtSommeEcartT = findViewById(R.id.txtSommeEcartT);
+        txtSommeEcartV = findViewById(R.id.txtSommeEcartV);
+        txtSommeT2 = findViewById(R.id.txtSommeT2);
+        txtSommeV2 = findViewById(R.id.txtSommeV2);
+        txtSommeTV = findViewById(R.id.txtSommeTV);
+        
+        txtValA = findViewById(R.id.txtValA);
+        txtValB = findViewById(R.id.txtValB);
+        txtEquation = findViewById(R.id.txtEquation);
 
         listeVentes = new ArrayList<>();
-        listeVentes.add(new Vente(1, 1990, 4200.0));
+         listeVentes.add(new Vente(1, 1990, 4200.0));
 
-        adapter = new VenteAdapter(listeVentes);
+        adapter = new VenteAdapter(listeVentes, this); // "this" pour permettre les clics
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Bouton Ajouter
         btnAjouter.setOnClickListener(v -> {
-            positionModification = -1;
-            layoutSaisie.setVisibility(View.VISIBLE);
-            btnAjouter.setVisibility(View.GONE);
-            
-            if (!listeVentes.isEmpty()) {
-                int derniereAnnee = listeVentes.get(listeVentes.size() - 1).getAnnee();
-                edtAnnee.setText(String.valueOf(derniereAnnee + 1));
-              edtAnnee.setFocusable(false);
-                edtAnnee.setEnabled(false);
-                edtVi.requestFocus();
-            } else {
-
-                edtAnnee.setText("");
-                edtAnnee.setEnabled(true);
-                edtAnnee.setFocusable(true);
-        edtAnnee.setFocusableInTouchMode(true);
-                edtAnnee.requestFocus();
-               
-            }
+            showSaisieDialog(-1); // -1 signifie Nouvel Ajout
         });
 
-        btnEnregistrer.setOnClickListener(v -> sauvegarderVente());
-        btnAnnuler.setOnClickListener(v -> masquerSaisie());
-
         rafraichirInfos();
     }
 
-    public void preparerModification(int position) {
-        positionModification = position;
+     public void showSaisieDialog(int position) {
+    View view = getLayoutInflater().inflate(R.layout.layout_dialog_saisie, null);
+    final EditText edtAnneeDialog = view.findViewById(R.id.dialog_edtAnnee);
+    final EditText edtViDialog = view.findViewById(R.id.dialog_edtVi);
+
+    if (position != -1) {
+        
         Vente v = listeVentes.get(position);
-        edtAnnee.setText(String.valueOf(v.getAnnee()));
-        edtVi.setText(String.valueOf(v.getVi()));
-        edtAnnee.setEnabled(false);
-        layoutSaisie.setVisibility(View.VISIBLE);
-        btnAjouter.setVisibility(View.GONE);
-        edtVi.requestFocus();
+        edtAnneeDialog.setText(String.valueOf(v.getAnnee()));
+        edtViDialog.setText(String.valueOf(v.getVi()));
+        
+              edtAnneeDialog.setEnabled(false); 
+        edtViDialog.requestFocus(); 
+    } else {
+       
+        if (!listeVentes.isEmpty()) {
+                     int derniereAnnee = listeVentes.get(listeVentes.size() - 1).getAnnee();
+            edtAnneeDialog.setText(String.valueOf(derniereAnnee + 1));            edtAnneeDialog.setEnabled(false); 
+            edtViDialog.requestFocus();
+        } else {
+                   edtAnneeDialog.setEnabled(true);
+            edtAnneeDialog.requestFocus();
+        }
     }
 
-    private void sauvegarderVente() {
-        String viStr = edtVi.getText().toString().trim();
-        if (viStr.isEmpty()) {
-            Toast.makeText(this, "Montant requis", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    Builder builder = new Builder(this);
+    builder.setView(view);
+    builder.setTitle(position == -1 ? "Ajouter une donnée" : "Modifier la donnée");
 
-        double vi = Double.parseDouble(viStr);
-        int annee = Integer.parseInt(edtAnnee.getText().toString());
+    builder.setPositiveButton("Enregistrer", (dialog, which) -> {
+        String anneeStr = edtAnneeDialog.getText().toString();
+        String viStr = edtViDialog.getText().toString();
+        
+        if (!anneeStr.isEmpty() && !viStr.isEmpty()) {
+            int annee = Integer.parseInt(anneeStr);
+            double vi = Double.parseDouble(viStr);
 
-        if (positionModification == -1) {
-            listeVentes.add(new Vente(listeVentes.size() + 1, annee, vi));
-            adapter.notifyItemInserted(listeVentes.size() - 1);
-        } else {
-            listeVentes.get(positionModification).setVi(vi);
-            adapter.notifyItemChanged(positionModification);
+            if (position == -1) {
+                int prochainT = listeVentes.size() + 1;
+                listeVentes.add(new Vente(prochainT, annee, vi));
+            } else {
+                listeVentes.get(position).setVi(vi);
+                           }
+            
+            adapter.notifyDataSetChanged();
+            rafraichirInfos();
         }
-        rafraichirInfos();
-        masquerSaisie();
+    });
+
+   builder.setNegativeButton("Annuler", null);
+    androidx.appcompat.app.AlertDialog dialog = builder.create();
+    if (dialog.getWindow() != null) {
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
     }
 
-    public void recalculerChronologie() {
-        if (listeVentes.isEmpty()) {
-            txtAnneeDebut.setText("----");
-            txtAnneeFin.setText("----");
-        } else {
-            int anneeDepart = listeVentes.get(0).getAnnee();
-            for (int i = 0; i < listeVentes.size(); i++) {
-                Vente v = listeVentes.get(i);
-                v.setT(i + 1);
-                v.setAnnee(anneeDepart + i); 
+   
+    dialog.show();
+}
+
+    public void rafraichirInfos() {
+        if (!listeVentes.isEmpty()) {
+            layoutTotal.setVisibility(View.VISIBLE);
+            int n = listeVentes.size();
+            double sommeT = 0, sommeVi = 0;
+
+            for (Vente v : listeVentes) {
+                sommeT += v.getT();
+                sommeVi += v.getVi();
             }
+
+            double moyT = sommeT / n;
+            double moyVi = sommeVi / n;
+
+            double sommeEcartT2 = 0, sommeEcartV2 = 0, sommeEcartTV = 0, sommeEcartT = 0, sommeEcartV = 0;
+            for (Vente v : listeVentes) {
+                double ecartT = v.getT() - moyT;
+                double ecartVi = v.getVi() - moyVi;
+                sommeEcartT += ecartT;
+                sommeEcartV += ecartVi;
+                sommeEcartV2 += ecartVi * ecartVi;
+                sommeEcartT2 += ecartT * ecartT;
+                sommeEcartTV += ecartT * ecartVi;
+            }
+
+            txtSommeT.setText(String.format("%.0f", sommeT));
+            txtSommeVi.setText(String.format("%.0f", sommeVi));
+            txtSommeEcartT.setText(String.format("%.2f", sommeEcartT));
+            txtSommeEcartV.setText(String.format("%.2f", sommeEcartV));
+            txtSommeT2.setText(String.format("%.2f", sommeEcartT2));
+            txtSommeV2.setText(String.format("%.2f", sommeEcartV2));
+            txtSommeTV.setText(String.format("%.2f", sommeEcartTV));
+
+            if (sommeEcartT2 != 0) {
+                double a = sommeEcartTV / sommeEcartT2;
+                double b = moyVi - (a * moyT);
+                txtValA.setText(String.format("%.4f", a));
+                txtValB.setText(String.format("%.2f", b));
+                txtEquation.setText(String.format("V = %.4ft + %.2f", a, b));
+            }
+
+            txtMoyenneT.setText(String.format("%.2f", moyT));
+            txtMoyenneVi.setText(String.format("%.2f", moyVi));
+            txtAnneeDebut.setText(String.valueOf(listeVentes.get(0).getAnnee()));
+            txtAnneeFin.setText(String.valueOf(listeVentes.get(listeVentes.size() - 1).getAnnee()));
+
+            adapter.updateMoyennes(moyT, moyVi);
+        } else {
+            layoutTotal.setVisibility(View.GONE);
+        }
+    }
+
+       public void supprimerVente(int position) {
+        listeVentes.remove(position);
+              for (int i = 0; i < listeVentes.size(); i++) {
+            listeVentes.get(i).setT(i + 1);
         }
         adapter.notifyDataSetChanged();
         rafraichirInfos();
-    }
-
-    private void masquerSaisie() {
-        layoutSaisie.setVisibility(View.GONE);
-        btnAjouter.setVisibility(View.VISIBLE);
-        edtVi.setText("");
-        positionModification = -1;
-    }
-
-    private void rafraichirInfos() {
-        if (!listeVentes.isEmpty()) {
-            txtAnneeDebut.setText(String.valueOf(listeVentes.get(0).getAnnee()));
-            txtAnneeFin.setText(String.valueOf(listeVentes.get(listeVentes.size() - 1).getAnnee()));
-        }
     }
 }

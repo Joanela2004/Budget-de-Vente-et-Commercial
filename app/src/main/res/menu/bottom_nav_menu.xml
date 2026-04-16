@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_calcul"
+        android:icon="@drawable/ic_menu_calcul"
+        android:title="Calculs" />
+    <item
+        android:id="@+id/nav_prevision"
+        android:icon="@drawable/ic_menu_prevision"
+        android:title="Prévision" />
+    <item
+        android:id="@+id/nav_rentabilite"
+        android:icon="@drawable/ic_menu_rentabilite"
+        android:title="Rentabilité" />
+</menu>
