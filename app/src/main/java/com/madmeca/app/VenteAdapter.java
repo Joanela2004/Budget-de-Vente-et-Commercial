@@ -47,12 +47,10 @@ public class VenteAdapter extends RecyclerView.Adapter<VenteAdapter.VenteViewHol
         holder.txtV2.setText(String.format("%.2f", ev * ev));
         holder.txtTV.setText(String.format("%.2f", et * ev));
 
-        // CLIC MODIFIER
         holder.btnModifier.setOnClickListener(v1 -> {
             activity.showSaisieDialog(position);
         });
 
-        // CLIC SUPPRIMER
         holder.btnSupprimer.setOnClickListener(v1 -> {
             activity.supprimerVente(position);
         });

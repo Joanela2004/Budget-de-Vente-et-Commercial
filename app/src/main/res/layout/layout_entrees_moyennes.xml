@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:text="Année de début"
                         android:textSize="11sp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gris"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:text="Année de fin"
                         android:textSize="11sp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gris"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -95,7 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="12dp"
+            >
 
             <TextView
                 android:layout_width="match_parent"

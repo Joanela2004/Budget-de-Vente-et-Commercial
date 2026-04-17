@@ -55,7 +55,7 @@
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#CCCCCC" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewVente"
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false" />
@@ -123,14 +123,16 @@
            >
 <TextView android:textColor="@color/black" android:id="@+id/txtEquation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="V = at + b" android:textStyle="bold" />
 </LinearLayout>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAjouterLigne"
+        <Button
+            android:id="@+id/btnAjouter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-    
-            android:text="Ajouter une ligne"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/text_primary"
             android:textColor="@color/white"
+            app:cornerRadius="12dp"
+            android:text="Ajouter une ligne"
             android:textStyle="bold" />
 
    

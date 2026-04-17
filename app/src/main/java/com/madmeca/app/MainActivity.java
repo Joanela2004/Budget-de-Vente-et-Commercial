@@ -6,11 +6,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.content.Intent;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 public class MainActivity extends AppCompatActivity {
@@ -18,43 +21,29 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VenteAdapter adapter;
     private List<Vente> listeVentes;
-    
+
     private Button btnAjouter;
+    private BottomNavigationView bottomNavigationView;
     private LinearLayout layoutTotal;
     private TextView txtAnneeDebut, txtAnneeFin, txtMoyenneT, txtMoyenneVi;
     private TextView txtSommeT, txtSommeVi, txtSommeEcartT, txtSommeEcartV, txtSommeT2, txtSommeV2, txtSommeTV;
     private TextView txtValA, txtValB, txtEquation;
+
+    private double aVal = 0;
+    private double bVal = 0;
+    private double rVal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnAjouter = findViewById(R.id.btnAjouterLigne);
-        layoutTotal = findViewById(R.id.layoutTotal);
-        recyclerView = findViewById(R.id.recyclerViewVente);
-        
-        txtAnneeDebut = findViewById(R.id.txtAnneeDebut);
-        txtAnneeFin = findViewById(R.id.txtAnneeFin);
-        txtMoyenneT = findViewById(R.id.txtMoyenneT);
-        txtMoyenneVi = findViewById(R.id.txtMoyenneVi);
-        
-        txtSommeT = findViewById(R.id.txtSommeT);
-        txtSommeVi = findViewById(R.id.txtSommeVi);
-        txtSommeEcartT = findViewById(R.id.txtSommeEcartT);
-        txtSommeEcartV = findViewById(R.id.txtSommeEcartV);
-        txtSommeT2 = findViewById(R.id.txtSommeT2);
-        txtSommeV2 = findViewById(R.id.txtSommeV2);
-        txtSommeTV = findViewById(R.id.txtSommeTV);
-        
-        txtValA = findViewById(R.id.txtValA);
-        txtValB = findViewById(R.id.txtValB);
-        txtEquation = findViewById(R.id.txtEquation);
-
+        initViews();
+        setupBottomNavigation();
         listeVentes = new ArrayList<>();
-         listeVentes.add(new Vente(1, 1990, 4200.0));
+        listeVentes.add(new Vente(1, 1990, 4200.0));
 
-        adapter = new VenteAdapter(listeVentes, this); // "this" pour permettre les clics
+        adapter = new VenteAdapter(listeVentes, this); 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -63,6 +52,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         rafraichirInfos();
+    }
+    @Override
+        protected void onResume() {
+            super.onResume();
+            
+            if (bottomNavigationView != null) {
+                bottomNavigationView.post(() -> {
+                    bottomNavigationView.setSelectedItemId(R.id.nav_calcul);
+                });
+            }
+        }
+    public void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        btnAjouter = findViewById(R.id.btnAjouter);
+        layoutTotal = findViewById(R.id.layoutTotal);
+        txtAnneeDebut = findViewById(R.id.txtAnneeDebut);
+        txtAnneeFin = findViewById(R.id.txtAnneeFin);
+        txtMoyenneT = findViewById(R.id.txtMoyenneT);
+        txtMoyenneVi = findViewById(R.id.txtMoyenneVi);
+        txtSommeT = findViewById(R.id.txtSommeT);
+        txtSommeVi = findViewById(R.id.txtSommeVi);
+        txtSommeEcartT = findViewById(R.id.txtSommeEcartT);
+        txtSommeEcartV = findViewById(R.id.txtSommeEcartV);
+        txtSommeT2 = findViewById(R.id.txtSommeT2);
+        txtSommeV2 = findViewById(R.id.txtSommeV2);
+        txtSommeTV = findViewById(R.id.txtSommeTV);
+        txtValA = findViewById(R.id.txtValA);
+        txtValB = findViewById(R.id.txtValB);
+        txtEquation = findViewById(R.id.txtEquation);
     }
 
    public void showSaisieDialog(int position){
@@ -160,22 +178,26 @@ public class MainActivity extends AppCompatActivity {
 
             txtSommeT.setText(String.format("%.0f", sommeT));
             txtSommeVi.setText(String.format("%.0f", sommeVi));
-            txtSommeEcartT.setText(String.format("%.2f", sommeEcartT));
-            txtSommeEcartV.setText(String.format("%.2f", sommeEcartV));
-            txtSommeT2.setText(String.format("%.2f", sommeEcartT2));
-            txtSommeV2.setText(String.format("%.2f", sommeEcartV2));
-            txtSommeTV.setText(String.format("%.2f", sommeEcartTV));
+            txtSommeEcartT.setText(String.format("%.0f", sommeEcartT));
+            txtSommeEcartV.setText(String.format("%.0f", sommeEcartV));
+            txtSommeT2.setText(String.format("%.0f", sommeEcartT2));
+            txtSommeV2.setText(String.format("%.0f", sommeEcartV2));
+            txtSommeTV.setText(String.format("%.0f", sommeEcartTV));
 
             if (sommeEcartT2 != 0) {
-                double a = sommeEcartTV / sommeEcartT2;
-                double b = moyVi - (a * moyT);
-                txtValA.setText(String.format("%.4f", a));
-                txtValB.setText(String.format("%.2f", b));
-                txtEquation.setText(String.format("V = %.4ft + %.2f", a, b));
+                this.aVal = sommeEcartTV / sommeEcartT2;
+                this.bVal = moyVi - (aVal * moyT);
+                txtValA.setText(String.format("%.0f", aVal));
+                txtValB.setText(String.format("%.0f", bVal));
+                txtEquation.setText(String.format("V = %.0ft + %.0f", aVal, bVal));
             }
 
-            txtMoyenneT.setText(String.format("%.2f", moyT));
-            txtMoyenneVi.setText(String.format("%.2f", moyVi));
+            if (sommeEcartT2!=0 && sommeEcartV2!=0){
+                double r = sommeEcartTV/Math.sqrt(sommeEcartT2*sommeEcartV2);
+                this.rVal=r;
+            }
+            txtMoyenneT.setText(String.format("%.0f", moyT));
+            txtMoyenneVi.setText(String.format("%.0f", moyVi));
             txtAnneeDebut.setText(String.valueOf(listeVentes.get(0).getAnnee()));
             txtAnneeFin.setText(String.valueOf(listeVentes.get(listeVentes.size() - 1).getAnnee()));
 
@@ -193,4 +215,38 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         rafraichirInfos();
     }
+
+    private void allerAPrevision() {
+    if (listeVentes.isEmpty()) {
+        Toast.makeText(this, "Saisissez des données d'abord", Toast.LENGTH_SHORT).show();
+        return;
+    }
+    
+    Intent intent = new Intent(this, PrevisionActivity.class);
+    intent.putExtra("valA", aVal); 
+    intent.putExtra("valB", bVal);
+    intent.putExtra("valR", rVal);
+    intent.putExtra("anneeDepart", listeVentes.get(0).getAnnee());
+    intent.putExtra("derniereValeurReelle", listeVentes.get(listeVentes.size()-1).getVi());
+    intent.putExtra("listeData", (ArrayList<Vente>) listeVentes);
+    startActivity(intent);
+}
+private void setupBottomNavigation() {
+    bottomNavigationView = findViewById(R.id.bottomNavigation);
+   bottomNavigationView.setSelectedItemId(R.id.nav_calcul);
+
+    bottomNavigationView.setOnItemSelectedListener(item -> {
+        int id = item.getItemId();
+        if (id == R.id.nav_prevision) {
+            allerAPrevision();
+            return true;
+        } else if (id == R.id.nav_rentabilite) {
+            // allerARentabilite();
+            return true;
+        } else if (id == R.id.nav_calcul) {
+           return true;
+        }
+        return false;
+    });
+}
 }

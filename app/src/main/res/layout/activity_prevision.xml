@@ -4,32 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/screen_bg">
-
-    <include 
-        android:id="@+id/include_header"
-        layout="@layout/layout_header" />
-
-    <ScrollView
+    <include
+        android:id="@+id/include_header_prevision"
+        layout="@layout/layout_header_prevision" />
+        <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/include_header"
+        android:layout_below="@id/include_header_prevision"
         android:layout_above="@+id/bottomNavigation"
-        android:fillViewport="true">
-
+        android:fillViewport="true"
+        android:layout_weight="1"
+        >
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="20dp">
-
-            <include layout="@layout/layout_entrees_moyennes" />
-            
-            <include layout="@layout/layout_calcul" />
-           
-        </LinearLayout>
-    </ScrollView>
-
-   <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        >
+        <include layout="@layout/layout_saisie_periode"/>
+        <include layout="@layout/layout_resultat_prevision"/>
+        <include layout="@layout/layout_graphique_tendance"/>
+    </LinearLayout>
+        </ScrollView>
+         <com.google.android.material.bottomnavigation.BottomNavigationView
     android:id="@+id/bottomNavigation"
     android:layout_width="match_parent"
     android:layout_height="70dp" 
@@ -44,5 +41,5 @@
     
     app:itemPaddingTop="8dp"
     app:itemPaddingBottom="12dp" />
-
 </RelativeLayout>
+   

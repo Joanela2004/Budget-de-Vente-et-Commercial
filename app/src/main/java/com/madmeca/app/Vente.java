@@ -1,6 +1,7 @@
 package com.madmeca.app;
+import java.io.Serializable;
 
-public class Vente {
+public class Vente implements Serializable {
     private int t;
     private int annee;
     private double vi;
