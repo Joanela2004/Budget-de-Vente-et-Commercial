@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 public class MainActivity extends AppCompatActivity {
 
@@ -58,70 +59,79 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         btnAjouter.setOnClickListener(v -> {
-            showSaisieDialog(-1); // -1 signifie Nouvel Ajout
+            showSaisieDialog(-1);
         });
 
         rafraichirInfos();
     }
 
-     public void showSaisieDialog(int position) {
+   public void showSaisieDialog(int position){
     View view = getLayoutInflater().inflate(R.layout.layout_dialog_saisie, null);
+    final TextView txtDialogTitle = view.findViewById(R.id.dialog_title);
     final EditText edtAnneeDialog = view.findViewById(R.id.dialog_edtAnnee);
     final EditText edtViDialog = view.findViewById(R.id.dialog_edtVi);
+    final Button btnSave = view.findViewById(R.id.btn_dialog_save);
+    final Button btnCancel = view.findViewById(R.id.btn_dialog_cancel);
 
     if (position != -1) {
-        
-        Vente v = listeVentes.get(position);
-        edtAnneeDialog.setText(String.valueOf(v.getAnnee()));
-        edtViDialog.setText(String.valueOf(v.getVi()));
-        
-              edtAnneeDialog.setEnabled(false); 
-        edtViDialog.requestFocus(); 
+        // Modification
+        txtDialogTitle.setText("Modifier une donnée");
+        edtAnneeDialog.setText(String.valueOf(listeVentes.get(position).getAnnee()));
+        edtViDialog.setText(String.valueOf(listeVentes.get(position).getVi()));
+        edtAnneeDialog.setEnabled(false);
+        edtViDialog.requestFocus();
     } else {
-       
-        if (!listeVentes.isEmpty()) {
-                     int derniereAnnee = listeVentes.get(listeVentes.size() - 1).getAnnee();
-            edtAnneeDialog.setText(String.valueOf(derniereAnnee + 1));            edtAnneeDialog.setEnabled(false); 
+        // Ajout
+        txtDialogTitle.setText("Ajouter une donnée");
+        if(!listeVentes.isEmpty()){
+            int derniereAnnee=listeVentes.get(listeVentes.size()-1).getAnnee();
+            edtAnneeDialog.setText(String.valueOf(derniereAnnee + 1));
+            edtAnneeDialog.setEnabled(false);
             edtViDialog.requestFocus();
-        } else {
-                   edtAnneeDialog.setEnabled(true);
+        }else{
+            edtAnneeDialog.setEnabled(true);
             edtAnneeDialog.requestFocus();
         }
     }
-
-    Builder builder = new Builder(this);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setView(view);
-    builder.setTitle(position == -1 ? "Ajouter une donnée" : "Modifier la donnée");
+    AlertDialog dialog = builder.create();
+    if(dialog.getWindow() != null){
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }   
+    btnSave.setOnClickListener(v -> {
+        String anneeStr = edtAnneeDialog.getText().toString().trim();
+        String viStr = edtViDialog.getText().toString().trim();
 
-    builder.setPositiveButton("Enregistrer", (dialog, which) -> {
-        String anneeStr = edtAnneeDialog.getText().toString();
-        String viStr = edtViDialog.getText().toString();
-        
-        if (!anneeStr.isEmpty() && !viStr.isEmpty()) {
-            int annee = Integer.parseInt(anneeStr);
-            double vi = Double.parseDouble(viStr);
-
-            if (position == -1) {
-                int prochainT = listeVentes.size() + 1;
-                listeVentes.add(new Vente(prochainT, annee, vi));
-            } else {
-                listeVentes.get(position).setVi(vi);
-                           }
-            
-            adapter.notifyDataSetChanged();
-            rafraichirInfos();
+        if (anneeStr.isEmpty() || viStr.isEmpty()) {
+            if (anneeStr.isEmpty()) {
+                edtAnneeDialog.setError("L'année est requise");
+            }
+            if (viStr.isEmpty()) {
+                edtViDialog.setError("Le chiffre d'affaires est requis");
+            }
+            return;
         }
+
+        int annee = Integer.parseInt(anneeStr);
+        double vi = Double.parseDouble(viStr);
+
+        if (position != -1) {
+            // Modification
+            listeVentes.get(position).setVi(vi);
+        } else {
+            // Ajout
+            int t = listeVentes.size() + 1;
+            listeVentes.add(new Vente(t, annee, vi));
+        }
+        adapter.notifyDataSetChanged();
+        rafraichirInfos();
+        dialog.dismiss();
     });
-
-   builder.setNegativeButton("Annuler", null);
-    androidx.appcompat.app.AlertDialog dialog = builder.create();
-    if (dialog.getWindow() != null) {
-        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
-    }
-
-   
+    btnCancel.setOnClickListener(v -> dialog.dismiss());
     dialog.show();
-}
+      }
+
 
     public void rafraichirInfos() {
         if (!listeVentes.isEmpty()) {
