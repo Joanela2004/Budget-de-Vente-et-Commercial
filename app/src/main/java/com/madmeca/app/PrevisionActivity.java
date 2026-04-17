@@ -42,7 +42,8 @@ public class PrevisionActivity extends AppCompatActivity {
     private double a, b, r;
     private int anneeDepart;
     private double derniereValeurReelle;
-
+    //pour stockage du dernier calcul
+    private double dernierResultatV = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +135,7 @@ public class PrevisionActivity extends AppCompatActivity {
             }
 
             construireGraphique(previsionV, anneeCible);
-
+            this.dernierResultatV = previsionV;
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Erreur de format", Toast.LENGTH_SHORT).show();
         }
@@ -198,15 +199,22 @@ public class PrevisionActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.nav_prevision);
-        bottomNavigation.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_calcul || id == R.id.nav_rentabilite) {
-                finish();
-                return true;
-            }
-            return id == R.id.nav_prevision;
-        });
+    BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+    bottomNavigation.setSelectedItemId(R.id.nav_prevision);
+    bottomNavigation.setOnItemSelectedListener(item -> {
+        int id = item.getItemId();
+        if (id == R.id.nav_rentabilite) {
+            Intent intent = new Intent(this, RentabiliteActivity.class);
+            // On envoie soit le calcul personnalisé, soit le calcul par défaut
+            intent.putExtra("qtePrevue", dernierResultatV > 0 ? dernierResultatV : (a * (listeVentes.size()+1) + b));
+            intent.putExtra("valR", r);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.nav_calcul) {
+            finish();
+            return true;
+        }
+        return id == R.id.nav_prevision;
+    });
     }
 }

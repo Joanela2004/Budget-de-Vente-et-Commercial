@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+     app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="DÉCISION"
+                android:textColor="#1A73E8"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badgeRentabilite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_vert"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="RENTABLE"
+                android:textColor="#1B5E20"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="top">
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:text="✓"
+                android:textColor="#4CAF50"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtDecisionSeuil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ŷ (6 720) > seuil (4 286) : bénéficiaire"
+                android:textColor="#444444"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="top">
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:text="✓"
+                android:textColor="#4CAF50"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtDecisionCorrelation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Corrélation r = 0,99 : prévision fiable"
+                android:textColor="#444444"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="top">
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:text="✓"
+                android:textColor="#4CAF50"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtDecisionMarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Marge nette : +1 704 000 Ar"
+                android:textColor="#444444"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="top">
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:text="!"
+                android:textColor="#FF9800"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Surveiller les charges fixes"
+                android:textColor="#444444"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

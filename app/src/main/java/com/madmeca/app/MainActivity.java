@@ -231,6 +231,21 @@ public class MainActivity extends AppCompatActivity {
     intent.putExtra("listeData", (ArrayList<Vente>) listeVentes);
     startActivity(intent);
 }
+private void allerARentabilite() {
+    if (listeVentes.isEmpty()) {
+        Toast.makeText(this, "Saisissez des données d'abord", Toast.LENGTH_SHORT).show();
+        return;
+    }
+    
+    // On calcule la prévision pour l'année suivante par défaut
+    int tSuivant = listeVentes.size() + 1;
+    double qtePrevue = (aVal * tSuivant) + bVal;
+
+    Intent intent = new Intent(this, RentabiliteActivity.class);
+    intent.putExtra("qtePrevue", qtePrevue);
+    intent.putExtra("valR", rVal);
+    startActivity(intent);
+}
 private void setupBottomNavigation() {
     bottomNavigationView = findViewById(R.id.bottomNavigation);
    bottomNavigationView.setSelectedItemId(R.id.nav_calcul);
@@ -241,7 +256,7 @@ private void setupBottomNavigation() {
             allerAPrevision();
             return true;
         } else if (id == R.id.nav_rentabilite) {
-            // allerARentabilite();
+             allerARentabilite();
             return true;
         } else if (id == R.id.nav_calcul) {
            return true;

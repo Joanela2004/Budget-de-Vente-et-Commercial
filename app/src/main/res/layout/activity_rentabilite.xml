@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg">
+
+    <LinearLayout
+        android:id="@+id/header_rentabilite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/text_primary"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analyse de rentabilité"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seuil, marge et décision"
+            android:textColor="#BBDEFB"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_rentabilite"
+        android:layout_above="@+id/bottomNavigation"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <include
+                android:id="@+id/Parametres"
+                layout="@layout/layout_parametre_rentabilite" />
+
+            <include
+                android:id="@+id/Indicateurs"
+                layout="@layout/layout_indicateur_rentabilite" />
+
+            <include
+                android:id="@+id/Seuil"
+                layout="@layout/layout_seuil_rentabilite" />
+
+            <include
+                android:id="@+id/Decision"
+                layout="@layout/layout_decision_rentabilite" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="70dp" 
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/tab_foreground"
+        app:itemTextColor="@color/tab_foreground"
+        app:itemPaddingTop="8dp"
+        app:itemPaddingBottom="12dp" />
+
+</RelativeLayout>

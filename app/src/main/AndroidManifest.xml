@@ -21,7 +21,9 @@
         <activity android:name=".PrevisionActivity">
 
         </activity>
+  <activity android:name=".RentabiliteActivity">
 
+        </activity>
     </application>
 
 </manifest>

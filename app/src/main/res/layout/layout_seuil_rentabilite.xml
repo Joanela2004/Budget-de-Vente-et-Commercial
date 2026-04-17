@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+     app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEUIL DE RENTABILITÉ"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF3E0"
+            android:padding="12dp"
+            android:text="Seuil = Charges fixes / Marge unitaire"
+            android:textAlignment="center"
+            android:textColor="#E65100"
+            android:textStyle="italic"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Marge unitaire"
+                android:textColor="#666666"/>
+            <TextView
+                android:id="@+id/txtMargeUnitaire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 Ar/unité"
+                android:textColor="#333333"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Seuil de rentabilité"
+                android:textColor="#666666"/>
+            <TextView
+                android:id="@+id/txtSeuilUnite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 unités"
+                android:textColor="#B71C1C"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <TextView
+                android:id="@+id/txtLabelQtePrevue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Qté prévue (V = 0)"
+                android:textColor="#666666"/>
+            <TextView
+                android:id="@+id/txtValQtePrevue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 unités"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Couverture du seuil"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:layout_marginBottom="4dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressRentabilite"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:progress="0"
+            android:max="100"
+            android:progressDrawable="@drawable/custom_progress_bar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="10sp"
+                android:layout_alignParentStart="true"/>
+            <TextView
+                android:id="@+id/txtPointMortGraduation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="seuil"
+                android:textColor="#B71C1C"
+                android:textSize="10sp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/txtCibleGraduation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="V"
+                android:textColor="@color/text_primary"
+                android:textSize="10sp"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
