@@ -1,10 +1,10 @@
 <?php
 $host = "localhost";
-$user="nella";
-$pwd="281104";
+$user=""; // votre nom d' utilisateur
+$pwd=""; // utilisez votre mot de passe 
 $dbname="db_madmeca";
 
-$con = new mysqli($host, $name , $pwd , $dbname);
+$con = new mysqli($host, $user , $pwd , $dbname);
 if($con->connect_error){
     die(json_encode([
         "status"=>"error",
@@ -12,6 +12,5 @@ if($con->connect_error){
     ]));
 }
 $con->set_charset("utf8");
-echo "connexion réussie";
 
 ?>

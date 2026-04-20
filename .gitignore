@@ -1,12 +1,10 @@
-# Gradle
+# Pour Android
 .gradle/
 build/
-
-# Android Studio
-.idea/
-*.iml
 local.properties
 
-# Divers
+# Pour PHP / Système
 .DS_Store
-captures/
+db_config.php
+vendor/
+Thumbs.db

@@ -13,10 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+import retrofit2.Call;
+import android.util.Log;
+import retrofit2.Callback;
+import retrofit2.Response;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 public class MainActivity extends AppCompatActivity {
+
+    private VenteApi api;
 
     private RecyclerView recyclerView;
     private VenteAdapter adapter;
@@ -33,25 +40,42 @@ public class MainActivity extends AppCompatActivity {
     private double bVal = 0;
     private double rVal = 0;
 
-    @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        api = RetrofitClient.getClient().create(VenteApi.class);
+        
         initViews();
         setupBottomNavigation();
         listeVentes = new ArrayList<>();
-        listeVentes.add(new Vente(1, 1990, 4200.0));
-
+        
         adapter = new VenteAdapter(listeVentes, this); 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        btnAjouter.setOnClickListener(v -> {
-            showSaisieDialog(-1);
-        });
+        chargerVentes();
 
-        rafraichirInfos();
+        btnAjouter.setOnClickListener(v -> showSaisieDialog(-1));
+    }
+
+    private void chargerVentes() {
+        api.getVentes().enqueue(new Callback<List<Vente>>() {
+            @Override
+            public void onResponse(Call<List<Vente>> call, Response<List<Vente>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listeVentes.clear();
+                    listeVentes.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                    rafraichirInfos();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Vente>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Erreur chargement : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     @Override
         protected void onResume() {
@@ -117,35 +141,52 @@ public class MainActivity extends AppCompatActivity {
     if(dialog.getWindow() != null){
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }   
-    btnSave.setOnClickListener(v -> {
-        String anneeStr = edtAnneeDialog.getText().toString().trim();
-        String viStr = edtViDialog.getText().toString().trim();
+  btnSave.setOnClickListener(v -> {
+    int annee = Integer.parseInt(edtAnneeDialog.getText().toString());
+    double vi = Double.parseDouble(edtViDialog.getText().toString());
+    Vente vData = new Vente(listeVentes.size() + 1, annee, vi);
 
-        if (anneeStr.isEmpty() || viStr.isEmpty()) {
-            if (anneeStr.isEmpty()) {
-                edtAnneeDialog.setError("L'année est requise");
+    if (position != -1) {
+        // --- MODIFICATION ---
+        api.updateVente(vData).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    chargerVentes();
+                    dialog.dismiss();
+                    Toast.makeText(MainActivity.this, "Mis à jour !", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("DEBUG_API", "Erreur update: " + response.code());
+                    Toast.makeText(MainActivity.this, "Erreur serveur update", Toast.LENGTH_SHORT).show();
+                }
             }
-            if (viStr.isEmpty()) {
-                edtViDialog.setError("Le chiffre d'affaires est requis");
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("DEBUG_API", "Erreur connexion : " + t.getMessage());
+                Toast.makeText(MainActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
-            return;
-        }
-
-        int annee = Integer.parseInt(anneeStr);
-        double vi = Double.parseDouble(viStr);
-
-        if (position != -1) {
-            // Modification
-            listeVentes.get(position).setVi(vi);
-        } else {
-            // Ajout
-            int t = listeVentes.size() + 1;
-            listeVentes.add(new Vente(t, annee, vi));
-        }
-        adapter.notifyDataSetChanged();
-        rafraichirInfos();
-        dialog.dismiss();
-    });
+        });
+    } else {
+        api.addVente(vData).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    chargerVentes();
+                    dialog.dismiss();
+                    Toast.makeText(MainActivity.this, "Ajouté avec succès !", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("DEBUG_API", "Erreur ajout code: " + response.code());
+                    Toast.makeText(MainActivity.this, "Erreur serveur ajout", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("DEBUG_API", "Erreur connexion : " + t.getMessage());
+                Toast.makeText(MainActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+});
     btnCancel.setOnClickListener(v -> dialog.dismiss());
     dialog.show();
       }
@@ -207,13 +248,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-       public void supprimerVente(int position) {
-        listeVentes.remove(position);
-              for (int i = 0; i < listeVentes.size(); i++) {
-            listeVentes.get(i).setT(i + 1);
-        }
-        adapter.notifyDataSetChanged();
-        rafraichirInfos();
+     public void supprimerVente(int position) {
+        int annee = listeVentes.get(position).getAnnee();
+        api.deleteVente(annee).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                chargerVentes(); 
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Erreur suppression", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void allerAPrevision() {
