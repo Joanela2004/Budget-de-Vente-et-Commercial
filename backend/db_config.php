@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
-$user=""; // votre nom d' utilisateur
-$pwd=""; // utilisez votre mot de passe 
+$user="nella";
+$pwd="281104";
 $dbname="db_madmeca";
 
 $con = new mysqli($host, $user , $pwd , $dbname);

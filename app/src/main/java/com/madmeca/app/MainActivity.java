@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         listeVentes = new ArrayList<>();
         
         adapter = new VenteAdapter(listeVentes, this); 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+ layoutManager.setStackFromEnd(true);
+ recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         chargerVentes();
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     Vente vData = new Vente(listeVentes.size() + 1, annee, vi);
 
     if (position != -1) {
-        // --- MODIFICATION ---
+
         api.updateVente(vData).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -283,7 +285,6 @@ private void allerARentabilite() {
         return;
     }
     
-    // On calcule la prévision pour l'année suivante par défaut
     int tSuivant = listeVentes.size() + 1;
     double qtePrevue = (aVal * tSuivant) + bVal;
 
